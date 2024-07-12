@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+        {% load static %}
+        {% include "includes.html" %}
+    </head>
+    <body>
+        {% include "header.html" %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-9">
+                    <div class="container">
+                        <div class="bg-secondary">
+                            <div class="p-2">
+                                <form method="post" action="{% url 'home' %}" class="d-flex" role="search">
+                                    {% csrf_token %}
+                                    <input class="form-control me-2" type="search" name="search_bar" id="search_bar" placeholder="Search for the latest dishes" aria-label="Search">
+                                    <button onclick="myFunction(event)" class="btn text-white btn-success" type="submit">Search</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% if matching_restaurant_items %}
+                            <div class="container mt-4">
+                                <div class="row">
+                                    {% for restaurant, items in matching_restaurant_items.items %}
+                                        <div class="col-md-4">
+                                            <div class="card shadow mb-4">
+                                                <div class="card-header">
+                                                    <h5 class="card-title">{{ restaurant }}</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-group list-group-flush">
+                                                        {% for item, price in items.items %}
+                                                            <li class="list-group-item">{{ item }}: {{ price }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-3">
+                    {% if matching_restaurant_items %}
+                        <div class="alert alert-info" role="alert">
+                            <h4>Matching Restaurant Names:</h4>
+                            <ul>
+                                {% for name in matching_restaurant_items.keys %}
+                                    <li>{{ name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
